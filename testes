@@ -1,0 +1,150 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct{
+    float altura;
+    int idade;
+    struct elemento *prox;
+}elemento;
+
+typedef struct{
+    int quant;
+    elemento *topo;
+}mostratopo;
+
+void empilhar(mostratopo *m, float alt, int ida){
+    elemento *novo = (elemento*)malloc(sizeof(elemento));
+    novo->altura = alt;
+    novo->idade = ida;
+    novo->prox = m->topo;
+    m->topo = novo;
+    m->quant += 1;
+};
+
+void imprimir(elemento *topo){
+    if(topo){
+        printf("\n\n A altura e: %.2f. Idade e: %d\n", topo->altura, topo->idade);
+        imprimir(topo->prox);
+    }else{
+        printf("\n\n Fim da pilha\n\n");
+    };
+};
+
+elemento *desempilhar(mostratopo *m, elemento *topo){
+    m->topo = topo->prox;
+    printf("\n\n Desempilhado o elemento\n\n");
+    printf("\n\n A altura e: %.2f. Idade e: %d\n", topo->altura, topo->idade);
+    //free(topo);
+    m->quant -= 1;
+    return topo;
+};
+
+passar1para2(mostratopo *m1, mostratopo *m2){
+    elemento *Deselemento = desempilhar(m1, m1->topo);
+    empilhar(m2, Deselemento->altura, Deselemento->idade);
+};
+
+int main (){
+    mostratopo m1, m2;
+    m1.topo = NULL;
+    m2.topo = NULL;
+    elemento *temp;
+    m1.quant = 0;
+
+    int a = 0, idade = 0, inicio = 0, j = 0;
+    float altura = 0;
+
+
+    printf(" Digite 1 para entar no menu ou qualquer tecla para sair: ");
+    scanf("%d", &inicio);
+
+    while(inicio == 1){
+
+        printf("\n\n\n Digite [1] para empilhar, \n\n Digite [2] para imprimir, \n\n Digite [3] para desempilhar, \n\n Digite [4] para passar um elemento da pilha 1 para pilha 2. \n\n Digite qualquer outra tecla para sair\n\n");
+        scanf("%d", &a);
+
+        switch(a){
+            case 1:
+                while(a==1){
+                    printf("\n\n Digite quantos elementos voce deseja empilhar: ");
+                    scanf("%d", &j);
+                    for(int i = 0; i < j; i++){
+                        m1.quant +=1;
+                        printf("\n\n Digite a altura do %d elemento: ", m1.quant);
+                        scanf("%f", &altura);
+                        printf("\n\n Digite a idade do %d elemento: ", m1.quant);
+                        scanf("%d", &idade);
+
+                        empilhar(&m1, altura, idade);
+                        m1.quant = m1.quant - 1;
+                    };
+                    printf("\n\n Se deseja empilhar mais um elemento digite 1\n\n Se nao, digite qual quer tecla\n\n");
+                    scanf("%d", &a);
+                };
+            break;
+
+            case 2 :
+                if(m1.topo){
+                    imprimir(m1.topo);
+                }else{
+                    printf("\n\n Nao a elementos na pilha\n\n");
+                };
+            break;
+
+            case 3 :
+                while(a==3){
+                    if(m1.topo){
+                        printf("\n\n Digite quantos elementos voce deseja deseempilhar: ");
+                        scanf("%d", &j);
+                        for(int i = 0; i < j; i++){
+                            if(m1.topo){
+                                temp = desempilhar(&m1, m1.topo);
+                            }else{
+                                printf("\n\n Nao a elementos na pilha\n\n");
+                                i = j;
+                            };
+                        };
+                        printf("\n\n Se deseja desempilhar outro elemento digite: 3\n\n Caso nao, digite qualquer outra tecla: \n");
+                        scanf("%d", &a);
+                    }else{
+                        printf("\n\n Nao a elementos na pilha\n\n");
+                        a = 1;
+                    };
+                };
+            break;
+
+            case 4 :
+                while(a==4){
+                    if(m1.topo){
+                        printf("\n\n Digite quantos elementos voce deseja passar da pilah 1 para pilha 2: ");
+                        scanf("%d", &j);
+                        for(int i = 0; i < j; i++){
+                            if(m1.topo){
+                                passar1para2(&m1, &m2);
+                                printf("\n\n Passando elemento da pilha 1 para a pilha 2 \n\n");
+                                printf("\n\n Elemento da Pilha1\n\n");
+                                imprimir(m1.topo);
+                                printf("\n\n Elemento da Pilha2\n\n");
+                                imprimir(m2.topo);
+                            }else{
+                                printf("\n\n Nao a elementos na pilha 1\n\n");
+                                i = j;
+                            };
+                        };
+                        printf("\n\n Se deseja passar mais algum elemento da pilha 1 para a pilha 2 digite: 4\n\n Caso nao, digite qualquer outra tecla: \n");
+                        scanf("%d", &a);
+                    }else{
+                        printf("\n\n Nao a elementos na pilha 1\n\n");
+                        a=1;
+                    };
+                };
+            break;
+
+            default :
+            printf (" Sair do Menu\n\n");
+            inicio = 0;
+        };
+        printf("\n\n Digite 1 para operar novamente ou qualquer tecla para sair\n\n");
+        scanf("%d", &inicio);
+    };
+}
