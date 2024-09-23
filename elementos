@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct{
+    float altura;
+    int idade;
+    struct elemento *prox;
+}elemento;
+
+typedef struct{
+    int quant;
+    elemento *topo;
+}mostratopo;
+
+void empilhar(mostratopo *m, float alt, int ida){
+    elemento *novo = (elemento*)malloc(sizeof(elemento));
+    novo->altura = alt;
+    novo->idade = ida;
+    novo->prox = m->topo;
+    m->topo = novo;
+    m->quant+=1;
+};
+
+void imprimir(elemento *topo){
+    if(topo){
+        printf("\n A altura %.2f e idade %d", topo->altura, topo->idade);
+        imprimir(topo->prox);
+    }else{
+        printf("\n fim da pilha\n");
+    };
+};
+
+elemento *desempilhar(mostratopo *m, elemento* topo){
+    if(topo){
+        printf("\n O elemento desempilhado e: altura: %.2f e idade: %d", topo->altura, topo->idade);
+        m->topo = topo->prox;
+    }else{
+        printf("\n Nao a elementos na pilha");
+    }
+    return topo;
+};
+
+void passar1para2(mostratopo *m1, mostratopo *m2){
+    if(m1->topo){
+        printf("\n Passando o elemento da pilha 1 para pilha 2\n");
+        printf("\n Os elementos da pilha 1 sao:\n ");
+        imprimir(m1->topo);
+        //printf("\n O elemento desempilhado e: altura: %.2f e idade: %d", m1->topo->altura, m1->topo->idade");
+        elemento *deselemento = desempilhar(m1, m1->topo);
+        empilhar(m2, deselemento->altura, deselemento->idade);
+        printf("\n Os elementos da pilha 2 sao:\n ");
+        imprimir(m2->topo);
+    }else{
+        printf("\n Nao a elementos na pilha 1\n");
+    };
+};
+
+int main (){
+    mostratopo m1, m2;
+    m1.topo = NULL;
+    m2.topo = NULL;
+    m1.quant = 0;
+    m2.quant = 0;
+    elemento *temp;
+
+    int menu, a, idade;
+    float altura;
+
+    printf("\n Digite [1] para entrar no menu ou qualquer tecla para sair: ");
+    scanf("%d", &menu);
+    while(menu==1){
+        printf("\n\n Digite [1] para empilhar\n Digite [2] para imprimir\n Digite [3] para desempilhar\n Digite [4] para passar um elemento da pilha 1 para pilha 2\n Caso nao, digite qualquer outra tecla para sair do menu: ");
+        scanf("%d", &a);
+        switch(a){
+        case 1:
+            printf("\n Digite a altura: ");
+            scanf("%f", &altura);
+            printf("\n Digite a idade: ");
+            scanf("%d", &idade);
+            empilhar(&m1, altura, idade);
+
+        break;
+
+        case 2:
+            imprimir(m1.topo);
+        break;
+
+        case 3:
+            temp = desempilhar(&m1, m1.topo);
+        break;
+
+        case 4:
+            passar1para2(&m1, &m2);
+        break;
+
+        default:
+            printf("\n Saindo do menu\n");
+        };
+        printf("\n Digite [1] para entrar novamento no menu ou qualquer tecla para sair: ");
+        scanf("%d", &menu);
+    };
+}
